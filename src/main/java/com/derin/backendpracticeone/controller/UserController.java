@@ -1,5 +1,6 @@
 package com.derin.backendpracticeone.controller;
 
+import com.derin.backendpracticeone.exception.UserNotFoundException;
 import com.derin.backendpracticeone.model.User;
 import com.derin.backendpracticeone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -21,12 +23,9 @@ public class UserController {
     List<User> getAllUsers(){
         return userRepository.findAll();
     }
-//    @GetMapping("/users/{id}")
-//    public User getUser(@PathVariable(value = "id") Long id) {
-//
-//        Iterable<Integer> result = id.stream()
-//                .map(Long::intValue)
-//                .collect(Collectors.toList());
-//        return userRepository.findAllById(result);
-//    }
+
+    @GetMapping("/user/{id}")
+    User getUserById(@PathVariable Long id) {
+        return userRepository.findById(id).orElseThrow(()->new UserNotFoundException(id));
+    }
 }
